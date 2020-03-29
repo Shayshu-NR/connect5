@@ -139,9 +139,13 @@ bool check_win_state(char ** board, int y, int x, char turn){
         }
     }
 
-    //Check diagonal cases
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
     
-    return true;
+    //Check diagonal cases
+
+    return false;
 }
 
 
