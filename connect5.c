@@ -2,12 +2,14 @@
 
 /*~~~~~Function Prototypes */
 char** board_set_up(int x, int y);
+void destroy_board(char **board);
 /*~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
 int main(void){
     char** board = board_set_up(7, 8);
     
+    destroy_board(board);
     return 0;
 }
 
@@ -28,5 +30,13 @@ char** board_set_up(int x, int y){
         }
     }
 
-    return initial_board
+    return initial_board;
+}
+
+//Deallocates the board data structure
+void destroy_board(char **board){
+    free(*board);
+    free(**board);
+
+    return;
 }
