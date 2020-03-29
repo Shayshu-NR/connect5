@@ -2,11 +2,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-/*~~~~~Function Prototypes */
+/*~~~~~Function Prototypes~~~~~*/
 char** board_set_up(int y, int x);
 void destroy_board(char **board);
 bool check_legal(int potential_col, char **board, int y, int x);
 char** update_game_board(int user_move, char **board, int y, char turn);
+bool check_win_state(char ** board, int y, int x);
 void print_board(char **board);
 /*~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -76,6 +77,71 @@ char** update_game_board(int user_move, char **board, int y, char turn){
     }
 
     return board;
+}
+
+
+//
+bool check_win_state(char ** board, int y, int x, char turn){
+    int count_red = 0;
+    int count_yellow = 0;
+
+    //Check horizonal cases
+    for(int i = 0; i < y; i++){
+        for(int j = 0; j < x; j++){
+            //Check for red
+            if(board[i][j] == 'r'){
+                count_red++;
+            }
+            else{
+                count_red = 0;
+            }
+            
+            //Check for yellow
+            if(board[i][j] == 'y'){
+                count_yellow++;
+            }
+            else{
+                count_yellow = 0;
+            }
+
+            if(count_red >= 5 || count_yellow >= 5){
+                return true
+            }
+        }
+    }
+
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
+
+    //Check vertical cases
+    for(int i = 0; i < x; i++){
+        for(int j = 0; j < y; j++){
+            //Check for red
+            if(board[j][i] == 'r'){
+                count_red++;
+            }
+            else{
+                count_red = 0;
+            }
+            
+            //Check for yellow
+            if(board[j][i] == 'y'){
+                count_yellow++;
+            }
+            else{
+                count_yellow = 0;
+            }
+
+            if(count_red >= 5 || count_yellow >= 5){
+                return true
+            }
+        }
+    }
+
+    //Check diagonal cases
+    
+    return true;
 }
 
 
