@@ -14,8 +14,7 @@ void print_board(char **board);
 
 int main(void){
     char** board = board_set_up(7, 8);
-
-
+    
     destroy_board(board);
     return 0;
 }
@@ -81,7 +80,7 @@ char** update_game_board(int user_move, char **board, int y, char turn){
 
 
 //
-bool check_win_state(char ** board, int y, int x, char turn){
+bool check_win_state(char ** board, int y, int x){
     int count_red = 0;
     int count_yellow = 0;
 
@@ -105,7 +104,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -134,7 +133,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -150,7 +149,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
         int row, col;
         for(row = diagStart, col = 0; row < y && col < x; row++, col++){
             //Check for red
-            if(board[j][i] == 'r'){
+            if(board[row][col] == 'r'){
                 count_red++;
             }
             else{
@@ -158,7 +157,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
             
             //Check for yellow
-            if(board[j][i] == 'y'){
+            if(board[row][col] == 'y'){
                 count_yellow++;
             }
             else{
@@ -166,7 +165,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -181,7 +180,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
         int row, col;
         for(row = 0, col = diagStart; row < y && col < x; row++, col++){
             //Check for red
-            if(board[j][i] == 'r'){
+            if(board[row][col] == 'r'){
                 count_red++;
             }
             else{
@@ -189,7 +188,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
             
             //Check for yellow
-            if(board[j][i] == 'y'){
+            if(board[row][col] == 'y'){
                 count_yellow++;
             }
             else{
@@ -197,7 +196,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -212,7 +211,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
         int row, col;
         for(row = diagStart, col = x - 1; row < y  && col > 0; row++, col--){
             //Check for red
-            if(board[j][i] == 'r'){
+            if(board[row][col] == 'r'){
                 count_red++;
             }
             else{
@@ -220,7 +219,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
             
             //Check for yellow
-            if(board[j][i] == 'y'){
+            if(board[row][col] == 'y'){
                 count_yellow++;
             }
             else{
@@ -228,7 +227,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -243,7 +242,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
         int row, col;
         for(row = 0, col = diagStart; row > y && col > 0; row++, col--){
             //Check for red
-            if(board[j][i] == 'r'){
+            if(board[row][col] == 'r'){
                 count_red++;
             }
             else{
@@ -251,7 +250,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
             
             //Check for yellow
-            if(board[j][i] == 'y'){
+            if(board[row][col] == 'y'){
                 count_yellow++;
             }
             else{
@@ -259,7 +258,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
