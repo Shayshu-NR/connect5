@@ -14,8 +14,7 @@ void print_board(char **board);
 
 int main(void){
     char** board = board_set_up(7, 8);
-
-
+    
     destroy_board(board);
     return 0;
 }
@@ -81,7 +80,7 @@ char** update_game_board(int user_move, char **board, int y, char turn){
 
 
 //
-bool check_win_state(char ** board, int y, int x, char turn){
+bool check_win_state(char ** board, int y, int x){
     int count_red = 0;
     int count_yellow = 0;
 
@@ -105,7 +104,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -134,7 +133,7 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
 
             if(count_red >= 5 || count_yellow >= 5){
-                return true
+                return true;
             }
         }
     }
@@ -144,7 +143,125 @@ bool check_win_state(char ** board, int y, int x, char turn){
     count_yellow = 0;
     
     //Check diagonal cases
+    //Case 1: top left to bottom right lower half
+    for(int diagStart = 0; diagStart < 3; diagStart++){
+        
+        int row, col;
+        for(row = diagStart, col = 0; row < y && col < x; row++, col++){
+            //Check for red
+            if(board[row][col] == 'r'){
+                count_red++;
+            }
+            else{
+                count_red = 0;
+            }
+            
+            //Check for yellow
+            if(board[row][col] == 'y'){
+                count_yellow++;
+            }
+            else{
+                count_yellow = 0;
+            }
 
+            if(count_red >= 5 || count_yellow >= 5){
+                return true;
+            }
+        }
+    }
+
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
+
+    //Case 2: top left to bottom right upper half
+    for(int diagStart = 1; diagStart < 4; diagStart++){
+
+        int row, col;
+        for(row = 0, col = diagStart; row < y && col < x; row++, col++){
+            //Check for red
+            if(board[row][col] == 'r'){
+                count_red++;
+            }
+            else{
+                count_red = 0;
+            }
+            
+            //Check for yellow
+            if(board[row][col] == 'y'){
+                count_yellow++;
+            }
+            else{
+                count_yellow = 0;
+            }
+
+            if(count_red >= 5 || count_yellow >= 5){
+                return true;
+            }
+        }
+    }
+
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
+
+    //Case 3: top right to bottom left lower half
+    for(int diagStart = 0; diagStart > 3; diagStart--){
+
+        int row, col;
+        for(row = diagStart, col = x - 1; row < y  && col > 0; row++, col--){
+            //Check for red
+            if(board[row][col] == 'r'){
+                count_red++;
+            }
+            else{
+                count_red = 0;
+            }
+            
+            //Check for yellow
+            if(board[row][col] == 'y'){
+                count_yellow++;
+            }
+            else{
+                count_yellow = 0;
+            }
+
+            if(count_red >= 5 || count_yellow >= 5){
+                return true;
+            }
+        }
+    }
+
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
+
+    //Case 4: top right to bottom left upper half
+    for(int diagStart = 6; diagStart > 3; diagStart--){
+
+        int row, col;
+        for(row = 0, col = diagStart; row > y && col > 0; row++, col--){
+            //Check for red
+            if(board[row][col] == 'r'){
+                count_red++;
+            }
+            else{
+                count_red = 0;
+            }
+            
+            //Check for yellow
+            if(board[row][col] == 'y'){
+                count_yellow++;
+            }
+            else{
+                count_yellow = 0;
+            }
+
+            if(count_red >= 5 || count_yellow >= 5){
+                return true;
+            }
+        }
+    }
     return false;
 }
 
