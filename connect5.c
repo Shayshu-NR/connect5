@@ -171,6 +171,10 @@ bool check_win_state(char ** board, int y, int x, char turn){
         }
     }
 
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
+
     //Case 2: top left to bottom right upper half
     for(int diagStart = 1; diagStart < 4; diagStart++){
 
@@ -198,6 +202,10 @@ bool check_win_state(char ** board, int y, int x, char turn){
         }
     }
 
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
+
     //Case 3: top right to bottom left lower half
     for(int diagStart = 0; diagStart > 3; diagStart--){
 
@@ -224,6 +232,10 @@ bool check_win_state(char ** board, int y, int x, char turn){
             }
         }
     }
+
+    //Reset counter
+    count_red = 0;
+    count_yellow = 0;
 
     //Case 4: top right to bottom left upper half
     for(int diagStart = 6; diagStart > 3; diagStart--){
