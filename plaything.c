@@ -1299,21 +1299,6 @@ int color_array_red[44800]={
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int color_array_black[44800]={
     
     /*Pixel format: Red: 5 bit, Green: 6 bit, Blue: 5 bit*/
@@ -2494,21 +2479,6 @@ int color_array_black[44800]={
     0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24, 0xbe, 0x24,
     
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 int color_array_yellow[44800]={
@@ -3782,9 +3752,6 @@ int main(void)
     
     assign_animation(4,3,pixel_ctrl_ptr,1);
     
-   
-    
-    
     assign_animation(6,3,pixel_ctrl_ptr,2);
     
     resetboard(pixel_ctrl_ptr);
@@ -3910,14 +3877,6 @@ void assign_animation(int  a, int  b ,volatile int * pixel_ctrl_ptr,int colour){
         
         looper++;
     }
-    
-    
-    
-    
-    
-    
-    
-    
 }
 //function to plot a single pixel
 void plot_pixel(int x, int y, short int line_color)
