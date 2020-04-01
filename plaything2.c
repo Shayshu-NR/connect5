@@ -192,8 +192,8 @@ int color_array_legs[44800]={
 //initialize
 void load_map(int map_id)
 {
-    int numrows=7;
-    int numcols=10;
+    int numrows=9;
+    int numcols=8;
     int shift_x = 60;
     int shift_y = 20;
     int block_size = 20;
@@ -336,9 +336,9 @@ void assign_animation(int  a, int  b ,volatile int * pixel_ctrl_ptr,int colour){
         clear_screen();
         for(int i=0;i<72;i++)
         {
-            if((i>=58 && i<=61) || (i>=66 && i<=69))
+            if((i>=57 && i<=62) || (i>=65 && i<=70))
                 continue;
-            if(i==56 || i==57 || i==64 || i==65 || i==62 || i==63 || i==70 || i==71 )
+            if(i==56  || i==64   || i==63 || i==71 )
             {
                 draw_box_coloured_legs(my_box[i]);
                 continue;
