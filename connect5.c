@@ -14,7 +14,35 @@ void print_board(char **board);
 
 int main(void){
     char** board = board_set_up(7, 8);
-    
+    char turn = 'r';
+
+    while(!check_win_state(board, 7, 8)){
+        print_board(board);
+
+        int col_Select;
+        
+        printf("Move ");
+        scanf("%d", &col_Select);
+
+        while(!check_legal(col_Select, board, 7, 8)){
+            printf("Move ");
+            scanf("%d", &col_Select);
+        }
+
+        update_game_board(col_Select, board, 7, turn);
+
+        if(turn == 'r'){
+            turn = 'y';
+        }
+        else{
+            turn = 'r';
+        }
+    }
+
+    print_board(board);
+    printf("Winner!");
+
+
     destroy_board(board);
     return 0;
 }
@@ -33,7 +61,7 @@ char** board_set_up(int y, int x){
         for(int j = 0; j < x; j++){
 
             //'e' means the spot is empty  
-            initial_board[i][j] = 'e';
+            initial_board[i][j] = 'o';
         }
     }
 
@@ -79,7 +107,7 @@ char** update_game_board(int user_move, char **board, int y, char turn){
 }
 
 
-//
+//Checks the win state of the board and returns true or false
 bool check_win_state(char ** board, int y, int x){
     int count_red = 0;
     int count_yellow = 0;
