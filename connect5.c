@@ -546,8 +546,14 @@ void clear_screen(){
     
     //draw black everywhere
     for(x = 0; x < 320; x++){
-        for(y = 0; y < 240; y++){
-            plot_pixel(x, y, 0x0);
+        for(y = 0; y < 200; y++){
+            plot_pixel(x, y, 0xFFFF);
+        }
+    }
+
+    for(x = 0; x < 320; x++){
+        for(y = 200; y < 240; y++){
+            plot_pixel(x, y, 0x5061);
         }
     }
 }
