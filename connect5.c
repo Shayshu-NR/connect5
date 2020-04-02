@@ -3704,6 +3704,7 @@ bool check_legal(int potential_col, char **board, int y, int x);
 char** update_game_board(int user_move, char **board, int y, char turn);
 bool check_win_state(char ** board, int y, int x);
 void print_board(char **board);
+int get_col_input(int sw_in);
 void clear_screen();
 void plot_pixel(int x, int y, short int line_color);
 void swap(int * a, int * b);
@@ -3721,6 +3722,11 @@ int main(void){
     char** board = board_set_up(7, 8);
     char turn = 'r';
     int colour = 0;
+    int reset_edge = 0xFFFFFFFF;
+    int edge_value;
+
+    //Reset the edge capture for the push buttons
+    *edge_cap = reset_edge;
 
     volatile int * pixel_ctrl_ptr = (int *)0xFF203020;
     int checker = 0;
@@ -3749,12 +3755,27 @@ int main(void){
             colour = 2;
         }
 
-        col_Select = *sw;
-        *ledr = col_Select;
-        
+        //Check if a keybutton has been pressed
+        edge_value = *edge_cap;
+        while(edge_value == 0){
+            //Stays here until the key is released
+            edge_value = *edge_cap;
+        }
+        *edge_cap = reset_edge;
+        edge_value = *edge_cap;
 
+        col_Select = get_col_input(*sw);
+        
+        //Check if the move is legal
         while(!check_legal(col_Select, board, 7, 8)){
-            col_Select = *sw;
+
+            while(*edge_cap == 0){
+            //Stays here until the key is released
+            edge_value = *edge_cap;
+            }
+            *edge_cap = reset_edge;
+            edge_value = *edge_cap;
+            col_Select = get_col_input(*sw);
         }
 
         update_game_board(col_Select, board, 7, turn);
@@ -3811,6 +3832,10 @@ void destroy_board(char **board){
 //Checks if the user is alloowed to place their
 //token into a given column, returns true if the move is valid
 bool check_legal(int potential_col, char **board, int y, int x){
+    if(potential_col <= 0 || potential_col >= x){
+        return false;
+    }
+
     //Check the column for any open spaces
     for(int i = 0; i < y; i++){
         if(board[i][potential_col] == 'o'){
@@ -4035,6 +4060,24 @@ void print_board(char **board){
       printf("\n");
     }
     printf("\n\n");
+}
+
+
+//Converts the binary inputs from the sw to usable values
+int get_col_input(int sw_in){
+    int power = 0;
+
+    while(sw_in != 0){
+        sw_in = sw_in/2;
+
+        if(sw_in == 0){
+            break;
+        }
+
+        power++;
+    }
+
+    return power;
 }
 
 //initialize
