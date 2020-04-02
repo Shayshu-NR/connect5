@@ -23,13 +23,7 @@ void resetboard(volatile int *pixel_ctrl_ptr);
 void draw_box_coloured(struct box box_num);
 void draw_box_coloured_red(struct box box_num);
 void draw_box_coloured_yellow(struct box box_num);
-
-
-
 void draw_box_coloured_legs(struct box box_num);
-
-
-
 void load_map(int map_id);
 void wait_for_vsync();
 // global variable
@@ -348,16 +342,9 @@ void assign_animation(int  a, int  b ,volatile int * pixel_ctrl_ptr,int colour){
         pixel_buffer_start = *(pixel_ctrl_ptr + 1); // new back buffer
         
         looper++;
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+    } 
 }
+
 //function to plot a single pixel
 void plot_pixel(int x, int y, short int line_color)
 {
@@ -378,8 +365,7 @@ void resetboard(volatile int *pixel_ctrl_ptr)
 {
     for(int i=0;i<56;i++)
     {
-        
-            draw_box_coloured(my_box[i]);
+        draw_box_coloured(my_box[i]);
         my_box[i].colour=0;
     }
     wait_for_vsync(); // swap front and back buffers on VGA vertical sync
