@@ -266,3 +266,32 @@ while(edge_value == 0){
     edge_value = *edge_cap;
 }
 *edge_cap = reset_edge;
+
+//Returns after one sec
+void delay(int wait_time){
+    //0b011 starts the timer at addr 0xFFFEC600
+    volatile int *timer_addr = 0xFFFEC600;
+    int start_timer = 3;
+
+    //Saves the delay value to the timer addr load 
+    *timer_addr = wait_time;
+    *(timer_addr + 0x8) = start_timer;
+    int check_stop =  *(timer_addr + 0xC);
+
+    //Wait for the timer to return 1
+    while(check_stop != 1){
+        check_stop =  *(timer_addr + 0xC);
+    }
+    
+    //Stop and reset the timer
+    int stop_timer = 0;
+    *(timer_addr + 0x8) = stop_timer;
+    int reset  = 1;
+    *(timer_addr + 0xC) = reset;
+
+    return;
+}
+
+void start_screen_animation(){
+    
+}
