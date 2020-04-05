@@ -33,8 +33,7 @@ int main(void)
     
     return 0;
 }
-void end_screen(volatile int *pixel_ctrl_ptr,int colour)
-{
+void end_screen(volatile int *pixel_ctrl_ptr,int colour){
     pixel_buffer_start = *pixel_ctrl_ptr;
     
     clear_screen();

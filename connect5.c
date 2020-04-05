@@ -485,7 +485,6 @@ int main(void){
         }		
     }
 
-
     /* set back pixel buffer to start of SDRAM memory */
     *(pixel_ctrl_ptr + 1) = 0xC0000000;
     pixel_buffer_start = *(pixel_ctrl_ptr + 1); // we draw on the back buffer
@@ -570,6 +569,8 @@ int main(void){
         else{
             turn = 'r';
         }
+
+        
     }
 
     print_board(board);
