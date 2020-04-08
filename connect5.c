@@ -904,6 +904,10 @@ volatile int *ledr = 0xFF200000;
 volatile int *edge_cap = 0xFF20005C;
 volatile int *timer_addr = 0xFFFEC600;
 int col_Select;
+int win_linex_r[] = {0, 0, 0, 0, 0};
+int win_liney_r[] = {0, 0, 0, 0, 0};
+int win_linex_y[] = {0, 0, 0, 0, 0};
+int win_liney_y[] = {0, 0, 0, 0, 0};
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
@@ -929,6 +933,8 @@ void wait_for_vsync();
 void delay(int wait_time);
 void start_screen_animation(volatile int * pixel_ctrl_ptr);
 void draw_enscreen(char winner, volatile int *pixel_ctrl_ptr);
+void draw_line(int x0, int y0, int x1, int y1, short int color);
+void draw_win_line(char **board, char winner);
 /*~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
@@ -1053,6 +1059,7 @@ int main(void){
 
         assign_animation(animation_col, animation_row, pixel_ctrl_ptr, colour);
 
+
         if(turn == 'r'){
             turn = 'y';
         }
@@ -1063,10 +1070,27 @@ int main(void){
     }
 
     if(turn == 'r'){
-        draw_enscreen('y', pixel_ctrl_ptr);
+        turn = 'y';
     }
     else{
+        turn = 'r';
+    }
+
+    //wait_for_vsync();
+    pixel_buffer_start = *(pixel_ctrl_ptr + 1); // new back buffer
+
+    draw_win_line(board, turn);
+
+    wait_for_vsync(); // swap front and back buffers on VGA vertical sync
+    
+
+    delay(10* 0x05F5E100);
+
+    if(turn == 'r'){
         draw_enscreen('r', pixel_ctrl_ptr);
+    }
+    else{
+        draw_enscreen('y', pixel_ctrl_ptr);
     }
 
     destroy_board(board);
@@ -1142,6 +1166,8 @@ char** update_game_board(int user_move, char **board, int y, char turn){
 bool check_win_state(char ** board, int y, int x){
     int count_red = 0;
     int count_yellow = 0;
+    int line_red = 0;
+    int line_yellow = 0;
 
     //Check horizonal cases
     for(int i = 0; i < y; i++){
@@ -1149,17 +1175,25 @@ bool check_win_state(char ** board, int y, int x){
             //Check for red
             if(board[i][j] == 'r'){
                 count_red++;
+                win_linex_r[line_red] = j;
+                win_liney_r[line_red] = i;
+                line_red++; 
             }
             else{
                 count_red = 0;
+                line_red = 0;
             }
             
             //Check for yellow
             if(board[i][j] == 'y'){
                 count_yellow++;
+                win_linex_y[line_yellow] = j;
+                win_liney_y[line_yellow] = i;
+                line_yellow++; 
             }
             else{
                 count_yellow = 0;
+                line_yellow = 0;
             }
 
             if(count_red >= 5 || count_yellow >= 5){
@@ -1171,6 +1205,8 @@ bool check_win_state(char ** board, int y, int x){
     //Reset counter
     count_red = 0;
     count_yellow = 0;
+    line_red = 0;
+    line_yellow = 0;
 
     //Check vertical cases
     for(int i = 0; i < x; i++){
@@ -1178,21 +1214,30 @@ bool check_win_state(char ** board, int y, int x){
             //Check for red
             if(board[j][i] == 'r'){
                 count_red++;
+                win_linex_r[line_red] = i;
+                win_liney_r[line_red] = j;
+                line_red++; 
             }
             else{
                 count_red = 0;
+                line_red = 0;
             }
             
             //Check for yellow
             if(board[j][i] == 'y'){
                 count_yellow++;
+                win_linex_y[line_yellow] = i;
+                win_liney_y[line_yellow] = j;
+                line_yellow++; 
             }
             else{
                 count_yellow = 0;
+                line_yellow = 0;
             }
 
             if(count_red >= 5 || count_yellow >= 5){
                 return true;
+                printf("%d %d", win_liney_r[0], win_liney_r[5]);
             }
         }
     }
@@ -1200,6 +1245,8 @@ bool check_win_state(char ** board, int y, int x){
     //Reset counter
     count_red = 0;
     count_yellow = 0;
+    line_red = 0;
+    line_yellow = 0;
     
     //Check diagonal cases
     //Case 1: top left to bottom right lower half
@@ -1210,17 +1257,25 @@ bool check_win_state(char ** board, int y, int x){
             //Check for red
             if(board[row][col] == 'r'){
                 count_red++;
+                win_linex_r[line_red] = col;
+                win_liney_r[line_red] = row;
+                line_red++; 
             }
             else{
                 count_red = 0;
+                line_red = 0;
             }
             
             //Check for yellow
             if(board[row][col] == 'y'){
                 count_yellow++;
+                win_linex_y[line_yellow] = col;
+                win_liney_y[line_yellow] = row;
+                line_yellow++; 
             }
             else{
                 count_yellow = 0;
+                line_yellow = 0;
             }
 
             if(count_red >= 5 || count_yellow >= 5){
@@ -1232,6 +1287,8 @@ bool check_win_state(char ** board, int y, int x){
     //Reset counter
     count_red = 0;
     count_yellow = 0;
+    line_red = 0;
+    line_yellow = 0;
 
     //Case 2: top left to bottom right upper half
     for(int diagStart = 1; diagStart < 4; diagStart++){
@@ -1241,17 +1298,25 @@ bool check_win_state(char ** board, int y, int x){
             //Check for red
             if(board[row][col] == 'r'){
                 count_red++;
+                win_linex_r[line_red] = col;
+                win_liney_r[line_red] = row;
+                line_red++; 
             }
             else{
                 count_red = 0;
+                line_red = 0;
             }
             
             //Check for yellow
             if(board[row][col] == 'y'){
                 count_yellow++;
+                win_linex_y[line_yellow] = col;
+                win_liney_y[line_yellow] = row;
+                line_yellow++; 
             }
             else{
                 count_yellow = 0;
+                line_yellow = 0;
             }
 
             if(count_red >= 5 || count_yellow >= 5){
@@ -1263,6 +1328,8 @@ bool check_win_state(char ** board, int y, int x){
     //Reset counter
     count_red = 0;
     count_yellow = 0;
+    line_red = 0;
+    line_yellow = 0;
 
     //Case 3: top right to bottom left lower half
     for(int diagStart = 0; diagStart > 3; diagStart--){
@@ -1272,17 +1339,25 @@ bool check_win_state(char ** board, int y, int x){
             //Check for red
             if(board[row][col] == 'r'){
                 count_red++;
+                win_linex_r[line_red] = col;
+                win_liney_r[line_red] = row;
+                line_red++;
             }
             else{
                 count_red = 0;
+                line_red = 0;
             }
             
             //Check for yellow
             if(board[row][col] == 'y'){
                 count_yellow++;
+                win_linex_y[line_yellow] = col;
+                win_liney_y[line_yellow] = row;
+                line_yellow++;
             }
             else{
                 count_yellow = 0;
+                line_yellow = 0;
             }
 
             if(count_red >= 5 || count_yellow >= 5){
@@ -1294,6 +1369,8 @@ bool check_win_state(char ** board, int y, int x){
     //Reset counter
     count_red = 0;
     count_yellow = 0;
+    line_red = 0;
+    line_yellow = 0;
 
     //Case 4: top right to bottom left upper half
     for(int diagStart = 6; diagStart > 3; diagStart--){
@@ -1303,17 +1380,25 @@ bool check_win_state(char ** board, int y, int x){
             //Check for red
             if(board[row][col] == 'r'){
                 count_red++;
+                win_linex_r[line_red] = col;
+                win_liney_r[line_red] = row;
+                line_red++;
             }
             else{
                 count_red = 0;
+                line_red = 0;
             }
             
             //Check for yellow
             if(board[row][col] == 'y'){
                 count_yellow++;
+                win_linex_y[line_yellow] = col;
+                win_liney_y[line_yellow] = row;
+                line_yellow++;
             }
             else{
                 count_yellow = 0;
+                line_yellow = 0;
             }
 
             if(count_red >= 5 || count_yellow >= 5){
@@ -1462,7 +1547,6 @@ void assign_animation(int  a, int  b ,volatile int * pixel_ctrl_ptr,int colour){
     endrow = b;
     clear_screen();
     int checker = startcol;
-    
     int looper = 0;
     
     
@@ -1479,21 +1563,24 @@ void assign_animation(int  a, int  b ,volatile int * pixel_ctrl_ptr,int colour){
                 continue;
                 
             }
-            if(colour == 1)
-            {
-            if(i == checker || my_box[i].colour == 1)
-                draw_box_coloured_red(my_box[i]);
-            else if(my_box[i].colour == 2)
-                draw_box_coloured_yellow(my_box[i]);
-            else
-                draw_box_coloured(my_box[i]);
-            }
-            else if(colour == 2)
-            {
-                if( my_box[i].colour==1)
+            if(colour == 1){
+                if(i == checker || my_box[i].colour == 1)
                     draw_box_coloured_red(my_box[i]);
+
+                else if(my_box[i].colour == 2)
+                    draw_box_coloured_yellow(my_box[i]);
+
+                else
+                    draw_box_coloured(my_box[i]);
+            }
+
+            else if(colour == 2){
+                if( my_box[i].colour == 1)
+                    draw_box_coloured_red(my_box[i]);
+
                 else if(i==checker || my_box[i].colour==2)
                     draw_box_coloured_yellow(my_box[i]);
+
                 else
                     draw_box_coloured(my_box[i]);
             }
@@ -1509,6 +1596,7 @@ void assign_animation(int  a, int  b ,volatile int * pixel_ctrl_ptr,int colour){
         }
         if(checker != startcol + 8*endrow)
             checker = checker + 8;
+
         if(checker == startcol + 8*endrow && colour == 1)
             my_box[checker].colour = 1;
         
@@ -1676,5 +1764,60 @@ void draw_enscreen(char winner, volatile int *pixel_ctrl_ptr){
 
     wait_for_vsync(); // swap front and back buffers on VGA vertical sync
     pixel_buffer_start = *(pixel_ctrl_ptr + 1); // new back buffer
+}
+
+void draw_win_line(char **board, char winner){
+    if(winner = 'r'){
+        int x0 = (my_box[win_linex_r[0] + win_liney_r[0]*8].start_pos_x + my_box[win_linex_r[0] + win_liney_r[0]*8].end_pos_x)/2;
+        int y0 = (my_box[win_linex_r[0] + win_liney_r[0]*8].start_pos_y + my_box[win_linex_r[0] + win_liney_r[0]*8].end_pos_y)/2;
+
+        int x1 = (my_box[win_linex_r[4] + win_liney_r[4]*8].start_pos_x + my_box[win_linex_r[4] + win_liney_r[4]*8].end_pos_x)/2;
+        int y1 = (my_box[win_linex_r[4] + win_liney_r[4]*8].start_pos_y + my_box[win_linex_r[4] + win_liney_r[4]*8].end_pos_y)/2;
+
+        draw_line(x0, y0, x1, y1, 0x0);
+    }
+}
+
+void draw_line(int x0, int y0, int x1, int y1, short int color) {
+    int is_steep = 0; //initialize to false
+    int abs_y = y1 - y0;
+    int abs_x = x1 - x0;
+    
+    if (abs_y < 0 ) abs_y =-abs_y; //change sign if negative
+    if (abs_x < 0) abs_x = -abs_x;
+    
+    if (abs_y > abs_x) is_steep=1; //TRUE
+    
+    if (is_steep) {
+        swap(&x0, &y0);
+        swap(&x1, &y1);
+    }
+    
+    if (x0>x1) {
+        swap(&x0, &x1);
+        swap(&y0, &y1);
+    }
+    
+    int deltax = x1 - x0;
+    int deltay = y1-y0;
+    if (deltay <0) deltay = -deltay;
+    int error = -(deltax / 2);
+    int y = y0;
+    int y_step;
+    
+    if (y0 < y1) y_step =1;
+    else y_step = -1;
+    
+    for(int x=x0; x<=x1; x++) {
+        if (is_steep) plot_pixel(y,x, color);
+        else plot_pixel(x,y, color);
+        
+        error += deltay;
+        
+        if (error>=0) {
+            y +=y_step;
+            error -= deltax;
+        }
+    }
 }
 /*~~~~~~~~~~~~~~~~~~~*/
