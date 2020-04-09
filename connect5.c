@@ -1334,8 +1334,6 @@ int main(void){
 
             assign_animation(animation_col, animation_row, pixel_ctrl_ptr, colour);
 
-            print_board(board);
-
             if(turn == 'r'){
                 turn = 'y';
             }
